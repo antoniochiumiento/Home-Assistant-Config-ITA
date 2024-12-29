@@ -1,0 +1,71 @@
+########################################################################################################################
+#                                                                                                                      #
+#                                    ******   COUNTER - POMPA DI CALORE   ******                                       #
+#                                                                                                                      #
+########################################################################################################################
+counter:
+  #######################################################################################################################
+  # COUNTER DEGLI SBRINAMENTI AVVENUTI DURANTE LA GIORNATA                                                              #
+  #######################################################################################################################
+  pdc_sbrinamenti:
+    name: "Sbrinamenti Pompa di Calore Oggi"
+    initial: 0
+    step: 1
+    restore: true
+########################################################################################################################
+#                                                                                                                      #
+#                                 ******   BINARY SENSOR - POMPA DI CALORE   ******                                    #
+#                                                                                                                      #
+########################################################################################################################
+binary_sensor:
+  #######################################################################################################################
+  # INPUT BOOLEAN DELLO STATO INTERMEDIO OVVERO QUANDO LA POMPA DI CALORE INIZIA LA MODALITA SBRINAMENTO                #
+  #######################################################################################################################
+  - platform: template
+    sensors:
+      heat_pump_running:
+        friendly_name: "Pompa di Calore in Funzione"
+        value_template: >-
+          {{ is_state('climate.heat_pump', 'heat') }}
+########################################################################################################################
+#                                                                                                                      #
+#                                  ******   AUTOMAZIONI - POMPA DI CALORE   ******                                     #
+#                                                                                                                      #
+########################################################################################################################
+automation:
+  ########################################################################################################################
+  # L'AUTOMAZIONE ATTIVA L'INPUT BOOLEAN SBRINAMENTO MONITOR QUANDO LA POMPA DI CALORE AVVIA LA MODALITÀ SBRINAMENTO     #
+  ########################################################################################################################
+  - alias: PDC - Attiva Monitor
+    triggers:
+      - trigger: state
+        entity_id: sensor.sbrinamento
+        from: "OFF"
+        to: "ON"
+    actions:
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.pdc_sbrinamento_monitor
+    mode: single
+  ########################################################################################################################
+  # L'AUTOMAZIONE INCREMENTA IL COUNTER SBRINAMENTO QUANDO LA POMPA DI CALORE ABBANDONA LA MODALITÀ SBRINAMENTO PER      #
+  # RITORNARE NELLA MODALITÀ RISCALDAMENTO                                                                               #
+  ########################################################################################################################
+  - alias: PDC - Incrementa Counter
+    triggers:
+      - trigger: state
+        entity_id: sensor.sbrinamento
+        from: "ON"
+        to: "OFF"
+    condition:
+      - condition: state
+        entity_id: input_boolean.pdc_sbrinamento_monitor
+        state: "on"
+    actions:
+      - action: counter.increment
+        target:
+          entity_id: counter.pdc_sbrinamenti
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.pdc_sbrinamento_monitor
+    mode: single
