@@ -2,7 +2,7 @@
 #                                                                                                                      #
 #                                                                                                                      #
 #                                       ******   GESTIONE NOTIFICHE   ******                                           #
-#                                       ** PACKAGE NOTIFICHE - VER. 0.0.1 **                                           #
+#                                       ** PACKAGE NOTIFICHE - VER. 0.0.2 **                                           #
 #                                       **   AUTORE: ANTONIO CHIUMIENTO   **                                           #
 #                                                                                                                      #
 #                                                                                                                      #
@@ -13,13 +13,11 @@ homeassistant:
   customize:
     package.node_anchors:
       customize: &customize
-        package: "Notifiche 0.1"
+        package: "Notifiche 0.0.2"
         author: "Antonio Chiumiento"
     setting:
       Media Player Alexa: &alexa media_player.ovunque
       Device per notifica push 1: &push1 mobile_app_iphone_di_antonio
-
-
 
 ########################################################################################################################
 #                                                                                                                      #
@@ -53,7 +51,12 @@ input_boolean:
   notify_whatsapp:
     name: Notifiche Whatsapp
     icon: mdi:bell
-  
+  ######################################################################################################################
+  # MODALITÀ NON DISTURBARE                                                                                            #
+  ######################################################################################################################
+  notify_non_disturbare:
+    name: Notifiche Telegram
+    icon: mdi:bell
 
 ########################################################################################################################
 #                                                                                                                      #
@@ -107,8 +110,34 @@ input_datetime:
     name: Orario di Disattivazione Whatsapp
     has_date: false
     has_time: true
+  ######################################################################################################################
+  # ORARI ATTIVAZIONE/DISATTIVAZIONE MODALITÀ NON DISTURBARE                                                           #
+  ######################################################################################################################
+  attivazione_orario_non_disturbare:
+    name: Orario di Attivazione Modalità Non Disturbare
+    has_date: false
+    has_time: true
+  disattivazione_orario_non_disturbare:
+    name: Orario di Disattivazione Modalità Non Disturbare
+    has_date: false
+    has_time: true
 
-
+########################################################################################################################
+#                                                                                                                      #
+#                                                                                                                      #
+#                                      ******   INPUT TEXT - NOTIFICHE   ******                                        #
+#                                                                                                                      #
+#                                                                                                                      #
+########################################################################################################################
+input_text:
+  saved_state_notify_telegram:
+    name: Stato Salvato Notify Telegram
+  saved_state_notify_app_mobile:
+    name: Stato Salvato Notify Mobile
+  saved_state_notify_alexa:
+    name: Stato Salvato Notify Alexa
+  saved_state_notify_whatsapp:
+    name: Stato Salvato Notify WhatsApp
 ########################################################################################################################
 #                                                                                                                      #
 #                                                                                                                      #
@@ -151,7 +180,7 @@ automation:
     actions:
       - action: input_boolean.turn_on
         target:
-          entity_id: input_boolean.notify_mobile
+          entity_id: input_boolean.notify_app_mobile
     mode: single
   - alias: Disattivazione Oraria Notifiche Mobile
     triggers:
@@ -161,7 +190,7 @@ automation:
     actions:
       - action: input_boolean.turn_off
         target:
-          entity_id: input_boolean.notify_mobile
+          entity_id: input_boolean.notify_app_mobile
     mode: single
   ######################################################################################################################
   # ATTIVAZIONE/DISATTIVAZIONE NOTIFICHE ALEXA                                                                      #
@@ -208,4 +237,132 @@ automation:
       - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.notify_whatsapp
+    mode: single
+  ######################################################################################################################
+  # ATTIVAZIONE/DISATTIVAZIONE DELLA MODALITÀ NON DISTURBARE                                                           #
+  ######################################################################################################################
+  - alias: Attivazione Oraria Modalità Non Disturbare
+    triggers:
+      - trigger: template
+        value_template: >
+          {{ states('sensor.time') == states('input_datetime.attivazione_orario_non_disturbare')[:5] }}
+    actions:
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.notify_non_disturbare
+    mode: single
+  - alias: Disattivazione Oraria Modalità Non Disturbare
+    triggers:
+      - trigger: template
+        value_template: >
+          {{ states('sensor.time') == states('input_datetime.disattivazione_orario_non_disturbare')[:5] }}
+    actions:
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.notify_non_disturbare
+    mode: single
+  ######################################################################################################################
+  # ATTIVAZIONE/DISATTIVAZIONE DI TUTTE LE NOTIFICHE IN MODALITÀ NON DISTURBARE                                        #
+  ######################################################################################################################
+  - alias: Disattiva Tutte le Notifiche in Modalità Non Disturbare e Salva gli Stati
+    triggers:
+      - trigger: state
+        entity_id: input_boolean.notify_non_disturbare
+        to: "on"
+    actions:
+      - action: input_text.set_value
+        target:
+          entity_id: input_text.saved_state_notify_telegram
+        data:
+          value: "{{ states('input_boolean.notify_telegram') }}"
+      - action: input_text.set_value
+        target:
+          entity_id: input_text.saved_state_notify_app_mobile
+        data:
+          value: "{{ states('input_boolean.notify_app_mobile') }}"
+      - action: input_text.set_value
+        target:
+          entity_id: input_text.saved_state_notify_alexa
+        data:
+          value: "{{ states('input_boolean.notify_alexa') }}"
+      - action: input_text.set_value
+        target:
+          entity_id: input_text.saved_state_notify_whatsapp
+        data:
+          value: "{{ states('input_boolean.notify_whatsapp') }}"
+      - action: input_boolean.turn_off
+        target:
+          entity_id:
+            - input_boolean.notify_telegram
+            - input_boolean.notify_app_mobile
+            - input_boolean.notify_alexa
+            - input_boolean.notify_whatsapp
+    mode: single
+
+  - alias: Ripristina Stati Notifiche
+    triggers:
+      - trigger: state
+        entity_id: input_boolean.notify_non_disturbare
+        to: "off"
+    action:
+      - choose:
+          - conditions:
+              - condition: template
+                value_template: "{{ states('input_text.saved_state_notify_telegram') == 'on' }}"
+            sequence:
+              - action: input_boolean.turn_on
+                target:
+                  entity_id: input_boolean.notify_telegram
+          - conditions:
+              - condition: template
+                value_template: "{{ states('input_text.saved_state_notify_telegram') == 'off' }}"
+            sequence:
+              - action: input_boolean.turn_off
+                target:
+                  entity_id: input_boolean.notify_telegram
+      - choose:
+          - conditions:
+              - condition: template
+                value_template: "{{ states('input_text.saved_state_notify_app_mobile') == 'on' }}"
+            sequence:
+              - action: input_boolean.turn_on
+                target:
+                  entity_id: input_boolean.notify_app_mobile
+          - conditions:
+              - condition: template
+                value_template: "{{ states('input_text.saved_state_notify_app_mobile') == 'off' }}"
+            sequence:
+              - action: input_boolean.turn_off
+                target:
+                  entity_id: input_boolean.notify_app_mobile
+      - choose:
+          - conditions:
+              - condition: template
+                value_template: "{{ states('input_text.saved_state_notify_alexa') == 'on' }}"
+            sequence:
+              - action: input_boolean.turn_on
+                target:
+                  entity_id: input_boolean.notify_alexa
+          - conditions:
+              - condition: template
+                value_template: "{{ states('input_text.saved_state_notify_alexa') == 'off' }}"
+            sequence:
+              - action: input_boolean.turn_off
+                target:
+                  entity_id: input_boolean.notify_alexa
+      - choose:
+          - conditions:
+              - condition: template
+                value_template: "{{ states('input_text.saved_state_notify_whatsapp') == 'on' }}"
+            sequence:
+              - action: input_boolean.turn_on
+                target:
+                  entity_id: input_boolean.notify_whatsapp
+          - conditions:
+              - condition: template
+                value_template: "{{ states('input_text.saved_state_notify_whatsapp') == 'off' }}"
+            sequence:
+              - action: input_boolean.turn_off
+                target:
+                  entity_id: input_boolean.notify_whatsapp
     mode: single
