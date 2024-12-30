@@ -18,12 +18,34 @@ homeassistant:
   # IMPOSTAZIONI PACKAGE                                                                                               #
   ######################################################################################################################
     setting:
+      ##################################################################################################################
+      # DEVICE ALEXA                                                                                                   #
+      ##################################################################################################################
       Media Player Alexa: &alexa media_player.ovunque
-        Device per notifica push 1: &push1 mobile_app_iphone
-        Device per notifica push 2: &push2 entita_smartphone_2
-        Device per notifica push 3: &push3 entita_smartphone_3
-        Device per notifica push 4: &push4 entita_smartphone_4
-        Device per notifica push 5: &push5 entita_smartphone_5
+      ##################################################################################################################
+      # DEVICE APP MOBILE                                                                                              #
+      ##################################################################################################################
+        Device per notifica push 1: &pushapp1 mobile_app_iphone
+        Device per notifica push 2: &pushapp2 entita_smartphone_2
+        Device per notifica push 3: &pushapp3 entita_smartphone_3
+        Device per notifica push 4: &pushapp4 entita_smartphone_4
+        Device per notifica push 5: &pushapp5 entita_smartphone_5
+      ##################################################################################################################
+      # DEVICE TELEGRAM                                                                                                #
+      ##################################################################################################################
+        Device per notifica push 1: &pushtelegram1 mobile_app_iphone
+        Device per notifica push 2: &pushtelegram2 entita_smartphone_2
+        Device per notifica push 3: &pushtelegram3 entita_smartphone_3
+        Device per notifica push 4: &pushtelegram4 entita_smartphone_4
+        Device per notifica push 5: &pushtelegram5 entita_smartphone_5
+      ##################################################################################################################
+      # DEVICE WHATSAPP                                                                                               #
+      ##################################################################################################################
+        Device per notifica push 1: &pushwhatsapp1 mobile_app_iphone
+        Device per notifica push 2: &pushwhatsapp2 entita_smartphone_2
+        Device per notifica push 3: &pushwhatsapp3 entita_smartphone_3
+        Device per notifica push 4: &pushwhatsapp4 entita_smartphone_4
+        Device per notifica push 5: &pushwhatsapp5 entita_smartphone_5
 ########################################################################################################################
 #                                                                                                                      #
 #                                                                                                                      #
@@ -64,14 +86,30 @@ input_number:
 #                                                                                                                      #
 ########################################################################################################################
 notify:
-  - name: Raccolta Dispositivi Notifiche
+  - name: Raccolta Dispositivi Notifiche Mobile
     platform: group
     services:
-      - service: *push1
-      - service: *push2
-      - service: *push3
-      - service: *push4
-      - service: *push5
+      - service: *pushapp1
+      - service: *pushapp2
+      - service: *pushapp3
+      - service: *pushapp4
+      - service: *pushapp5
+  - name: Raccolta Dispositivi Notifiche Telegram
+    platform: group
+    services:
+      - service: *pushtelegram1
+      - service: *pushtelegram2
+      - service: *pushtelegram3
+      - service: *pushtelegram4
+      - service: *pushtelegram5
+  - name: Raccolta Dispositivi Notifiche Whatsapp
+    platform: group
+    services:
+      - service: *pushwhatsapp1
+      - service: *pushwhatsapp2
+      - service: *pushwhatsapp3
+      - service: *pushwhatsapp4
+      - service: *pushwhatsapp5
 ########################################################################################################################
 #                                                                                                                      #
 #                                                                                                                      #
@@ -129,9 +167,9 @@ automation:
           entity_id: input_boolean.notify_raccolta_differenziata
     mode: single
   ######################################################################################################################
-  # RICORDA RACCOLTA DIFFERENZIATA                                                                                     #
+  # RICORDA RACCOLTA DIFFERENZIATA APP MOBILE                                                                          #
   ######################################################################################################################
-  - alias: Disattivazione Notifiche Raccolta Differenziata
+  - alias: Notifiche Raccolta Differenziata App
     triggers:
       - trigger: template
         value_template: "{{ now().minute % states('input_number.frequenza_notifiche_raccolta_differenziata')|int(2) == 0 }}"
@@ -139,11 +177,62 @@ automation:
       - condition: state
         entity_id: input_boolean.notify_raccolta_differenziata
         state: "on"
+      - condition: state
+        entity_id: input_boolean.notify_app_mobile
+        state: "on"
       - condition: time
         after: input_datetime.raccolta_differenziata_notifiche_start_time
         before: input_datetime.raccolta_differenziata_notifiche_end_time
     actions:
-      - action: notify.raccolta_dispositivi_notifiche
+      - action: notify.raccolta_dispositivi_notifiche_mobile
+        continue_on_error: true
+        data:
+          title: 🚮 Promemoria Raccolta Differenziata
+          message: Ricordati di buttare l'immondizia oggi
+    mode: single
+  ######################################################################################################################
+  # RICORDA RACCOLTA DIFFERENZIATA APP TELEGRAM                                                                         #
+  ######################################################################################################################
+  - alias: Notifiche Raccolta Differenziata App
+    triggers:
+      - trigger: template
+        value_template: "{{ now().minute % states('input_number.frequenza_notifiche_raccolta_differenziata')|int(2) == 0 }}"
+    condition:
+      - condition: state
+        entity_id: input_boolean.notify_raccolta_differenziata
+        state: "on"
+      - condition: state
+        entity_id: input_boolean.notify_telegram
+        state: "on"
+      - condition: time
+        after: input_datetime.raccolta_differenziata_notifiche_start_time
+        before: input_datetime.raccolta_differenziata_notifiche_end_time
+    actions:
+      - action: notify.raccolta_dispositivi_notifiche_telegram
+        continue_on_error: true
+        data:
+          title: 🚮 Promemoria Raccolta Differenziata
+          message: Ricordati di buttare l'immondizia oggi
+    mode: single
+  ######################################################################################################################
+  # RICORDA RACCOLTA DIFFERENZIATA APP WHATSAPP                                                                          #
+  ######################################################################################################################
+  - alias: Notifiche Raccolta Differenziata Whatsapp
+    triggers:
+      - trigger: template
+        value_template: "{{ now().minute % states('input_number.frequenza_notifiche_raccolta_differenziata')|int(2) == 0 }}"
+    condition:
+      - condition: state
+        entity_id: input_boolean.notify_raccolta_differenziata
+        state: "on"
+      - condition: state
+        entity_id: input_boolean.notify_whatsapp
+        state: "on"
+      - condition: time
+        after: input_datetime.raccolta_differenziata_notifiche_start_time
+        before: input_datetime.raccolta_differenziata_notifiche_end_time
+    actions:
+      - action: notify.raccolta_dispositivi_notifiche_whatsapp
         continue_on_error: true
         data:
           title: 🚮 Promemoria Raccolta Differenziata
