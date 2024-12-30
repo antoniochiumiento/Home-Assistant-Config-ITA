@@ -4,4 +4,6 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/antoniochiumiento/Home-Assistant-Config-ITA?style=for-the-badge)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/antoniochiumiento/Home-Assistant-Config-ITA?style=for-the-badge)
 
-I miei file di configurazione personale di Home Assistant
+## Repository
+Questo repository contiene la mia configurazione di Home Assistant. È una raccolta dei miei file di configurazione, automazioni, script e tanto altro ancora.
+Il repository è in continuo aggiornamento...
