@@ -1,0 +1,151 @@
+########################################################################################################################
+#                                                                                                                      #
+#                                                                                                                      #
+#                                       ****** RACCOLTA DIFFERENZIATA ******                                           #
+#                                       **      PACKAGE  - VER. 0.0.1     **                                           #
+#                                       **   AUTORE: ANTONIO CHIUMIENTO   **                                           #
+#                                                                                                                      #
+#                                                                                                                      #
+########################################################################################################################
+homeassistant:
+  time_zone: Europe/Rome
+  customize:
+    package.node_anchors:
+      customize: &customize
+        package: "Notifiche 0.0.1"
+        author: "Antonio Chiumiento"
+  ######################################################################################################################
+  # IMPOSTAZIONI PACKAGE                                                                                               #
+  ######################################################################################################################
+    setting:
+      Media Player Alexa: &alexa media_player.ovunque
+        Device per notifica push 1: &push1 mobile_app_iphone
+        Device per notifica push 2: &push2 entita_smartphone_2
+        Device per notifica push 3: &push3 entita_smartphone_3
+        Device per notifica push 4: &push4 entita_smartphone_4
+        Device per notifica push 5: &push5 entita_smartphone_5
+########################################################################################################################
+#                                                                                                                      #
+#                                                                                                                      #
+#                              ******   INPUT BOOLEAN - RACCOLTA DIFFERENZIATA   ******                                #
+#                                                                                                                      #
+#                                                                                                                      #
+########################################################################################################################
+input_boolean:
+  ######################################################################################################################
+  # NOTIFICHE RACCOLTA DIFFERENZIATA                                                                                   #
+  ######################################################################################################################
+  notify_raccolta_differenziata:
+    name: Notifiche Raccolta Differenziata
+    icon: mdi:bell
+########################################################################################################################
+#                                                                                                                      #
+#                                                                                                                      #
+#                              ******   INPUT NUMBER  - RACCOLTA DIFFERENZIATA   ******                                #
+#                                                                                                                      #
+#                                                                                                                      #
+########################################################################################################################
+input_number:
+  ######################################################################################################################
+  # FREQUENZA NOTIFICHE                                                                                                #
+  ######################################################################################################################
+  frequenza_notifiche_raccolta_differenziata:
+    name: Frequenza notifiche raccolta differenziata
+    min: 5
+    max: 60
+    step: 5
+    unit_of_measurement: "min"
+    icon: mdi:timer-sync
+########################################################################################################################
+#                                                                                                                      #
+#                                                                                                                      #
+#                      ******   NOTIFY - RACCOLTA DISPOSITIVI A CUI INVIARE LA NOTIFICA   ******                       #
+#                                                                                                                      #
+#                                                                                                                      #
+########################################################################################################################
+notify:
+  - name: Raccolta Dispositivi Notifiche
+    platform: group
+    services:
+      - service: *push1
+      - service: *push2
+      - service: *push3
+      - service: *push4
+      - service: *push5
+########################################################################################################################
+#                                                                                                                      #
+#                                                                                                                      #
+#                             ******   INPUT DATETIME  - RACCOLTA DIFFERENZIATA   ******                               #
+#                                                                                                                      #
+#                                                                                                                      #
+########################################################################################################################
+input_datetime:
+  ######################################################################################################################
+  # INIZIO NOTIFICHE                                                                                                   #
+  ######################################################################################################################
+  raccolta_differenziata_notifiche_start_time:
+    name: Inizio notifiche raccolta differenziata
+    has_time: true
+    has_date: false
+    icon: mdi:timer-music
+  ######################################################################################################################
+  # FINE NOTIFICHE                                                                                                   #
+  ######################################################################################################################
+  raccolta_differenziata_notifiche_end_time:
+    name: Fine notifiche raccolta differenziata
+    has_time: true
+    has_date: false
+    icon: mdi:timer-off
+########################################################################################################################
+#                                                                                                                      #
+#                                                                                                                      #
+#                               ******   AUTOMAZIONI - RACCOLTA DIFFERENZIATA   ******                                 #
+#                                                                                                                      #
+#                                                                                                                      #
+########################################################################################################################
+automation:
+  ######################################################################################################################
+  # ATTIVAZIONE NOTIFICHE RACCOLTA DIFFERENZIATA                                                                       #
+  ######################################################################################################################
+  - alias: Attivazione Notifiche Raccolta Differenziata
+    triggers:
+      - trigger: time
+        at: "04:59:00"
+    actions:
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.notify_raccolta_differenziata
+    mode: single
+  ######################################################################################################################
+  # DISATTIVAZIONE NOTIFICHE RACCOLTA DIFFERENZIATA                                                                    #
+  ######################################################################################################################
+  - alias: Disattivazione Notifiche Raccolta Differenziata
+    triggers:
+      - trigger: time
+        at: input_datetime.raccolta_differenziata_notifiche_end_time
+    actions:
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.notify_raccolta_differenziata
+    mode: single
+  ######################################################################################################################
+  # RICORDA RACCOLTA DIFFERENZIATA                                                                                     #
+  ######################################################################################################################
+  - alias: Disattivazione Notifiche Raccolta Differenziata
+    triggers:
+      - trigger: template
+        value_template: "{{ now().minute % states('input_number.frequenza_notifiche_raccolta_differenziata')|int(2) == 0 }}"
+    condition:
+      - condition: state
+        entity_id: input_boolean.notify_raccolta_differenziata
+        state: "on"
+      - condition: time
+        after: input_datetime.raccolta_differenziata_notifiche_start_time
+        before: input_datetime.raccolta_differenziata_notifiche_end_time
+    actions:
+      - action: notify.raccolta_dispositivi_notifiche
+        continue_on_error: true
+        data:
+          title: 🚮 Promemoria Raccolta Differenziata
+          message: Ricordati di buttare l'immondizia oggi
+    mode: single

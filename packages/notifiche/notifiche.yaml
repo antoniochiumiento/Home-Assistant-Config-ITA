@@ -15,9 +15,12 @@ homeassistant:
       customize: &customize
         package: "Notifiche 0.0.2"
         author: "Antonio Chiumiento"
+  ######################################################################################################################
+  # IMPOSTAZIONI PACKAGE                                                                                               #
+  ######################################################################################################################
     setting:
       Media Player Alexa: &alexa media_player.ovunque
-      Device per notifica push 1: &push1 mobile_app_iphone_di_antonio
+      Device per notifica push 1: &push1 mobile_app_iphone
 
 ########################################################################################################################
 #                                                                                                                      #
