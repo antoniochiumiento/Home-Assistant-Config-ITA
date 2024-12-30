@@ -1,0 +1,211 @@
+########################################################################################################################
+#                                                                                                                      #
+#                                                                                                                      #
+#                                       ******   GESTIONE NOTIFICHE   ******                                           #
+#                                       ** PACKAGE NOTIFICHE - VER. 0.0.1 **                                           #
+#                                       **   AUTORE: ANTONIO CHIUMIENTO   **                                           #
+#                                                                                                                      #
+#                                                                                                                      #
+########################################################################################################################
+
+homeassistant:
+  time_zone: Europe/Rome
+  customize:
+    package.node_anchors:
+      customize: &customize
+        package: "Notifiche 0.1"
+        author: "Antonio Chiumiento"
+    setting:
+      Media Player Alexa: &alexa media_player.ovunque
+      Device per notifica push 1: &push1 mobile_app_iphone_di_antonio
+
+
+
+########################################################################################################################
+#                                                                                                                      #
+#                                                                                                                      #
+#                                    ******   INPUT BOOLEAN - NOTIFICHE   ******                                       #
+#                                                                                                                      #
+#                                                                                                                      #
+########################################################################################################################
+input_boolean:
+  ######################################################################################################################
+  # NOTIFICHE TELEGRAM                                                                                                 #
+  ######################################################################################################################
+  notify_telegram:
+    name: Notifiche Telegram
+    icon: mdi:bell
+  ######################################################################################################################
+  # NOTIFICHE APP MOBILE                                                                                               #
+  ######################################################################################################################
+  notify_app_mobile:
+    name: Notifiche App Mobile
+    icon: mdi:bell
+  ######################################################################################################################
+  # NOTIFICHE ALEXA                                                                                                    #
+  ######################################################################################################################
+  notify_alexa:
+    name: Notifiche Alexa
+    icon: mdi:bell
+  ######################################################################################################################
+  # NOTIFICHE WHATSAPP                                                                                                 #
+  ######################################################################################################################
+  notify_whatsapp:
+    name: Notifiche Whatsapp
+    icon: mdi:bell
+  
+
+########################################################################################################################
+#                                                                                                                      #
+#                                                                                                                      #
+#                                    ******   INPUT DATETIME - NOTIFICHE   ******                                      #
+#                                                                                                                      #
+#                                                                                                                      #
+########################################################################################################################
+input_datetime:
+  ######################################################################################################################
+  # ORARI ATTIVAZIONE/DISATTIVAZIONE NOTIFICHE TELEGRAM                                                                #
+  ######################################################################################################################
+  attivazione_orario_telegram:
+    name: Orario di Attivazione Telegram
+    has_date: false
+    has_time: true
+  disattivazione_orario_telegram:
+    name: Orario di Disattivazione Telegram
+    has_date: false
+    has_time: true
+  ######################################################################################################################
+  # ORARI ATTIVAZIONE/DISATTIVAZIONE NOTIFICHE MOBILE                                                                #
+  ######################################################################################################################
+  attivazione_orario_mobile:
+    name: Orario di Attivazione Mobile
+    has_date: false
+    has_time: true
+  disattivazione_orario_mobile:
+    name: Orario di Disattivazione Mobile
+    has_date: false
+    has_time: true
+  ######################################################################################################################
+  # ORARI ATTIVAZIONE/DISATTIVAZIONE NOTIFICHE ALEXA                                                                #
+  ######################################################################################################################
+  attivazione_orario_alexa:
+    name: Orario di Attivazione Alexa
+    has_date: false
+    has_time: true
+  disattivazione_orario_alexa:
+    name: Orario di Disattivazione Alexa
+    has_date: false
+    has_time: true
+  ######################################################################################################################
+  # ORARI ATTIVAZIONE/DISATTIVAZIONE NOTIFICHE WHATSAPP                                                                #
+  ######################################################################################################################
+  attivazione_orario_whatsapp:
+    name: Orario di Attivazione Whatsapp
+    has_date: false
+    has_time: true
+  disattivazione_orario_whatsapp:
+    name: Orario di Disattivazione Whatsapp
+    has_date: false
+    has_time: true
+
+
+########################################################################################################################
+#                                                                                                                      #
+#                                                                                                                      #
+#                                     ******   AUTOMAZIONI - NOTIFICHE   ******                                        #
+#                                                                                                                      #
+#                                                                                                                      #
+########################################################################################################################
+automation:
+  ######################################################################################################################
+  # ATTIVAZIONE/DISATTIVAZIONE NOTIFICHE TELEGRAM                                                                      #
+  ######################################################################################################################
+  - alias: Attivazione Oraria Notifiche Telegram
+    triggers:
+      - trigger: template
+        value_template: >
+          {{ states('sensor.time') == states('input_datetime.attivazione_orario_telegram')[:5] }}
+    actions:
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.notify_telegram
+    mode: single
+  - alias: Disattivazione Oraria Notifiche Telegram
+    triggers:
+      - trigger: template
+        value_template: >
+          {{ states('sensor.time') == states('input_datetime.disattivazione_orario_telegram')[:5] }}
+    actions:
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.notify_telegram
+    mode: single
+  ######################################################################################################################
+  # ATTIVAZIONE/DISATTIVAZIONE NOTIFICHE MOBILE                                                                     #
+  ######################################################################################################################
+  - alias: Attivazione Oraria Notifiche Mobile
+    triggers:
+      - trigger: template
+        value_template: >
+          {{ states('sensor.time') == states('input_datetime.attivazione_orario_mobile')[:5] }}
+    actions:
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.notify_mobile
+    mode: single
+  - alias: Disattivazione Oraria Notifiche Mobile
+    triggers:
+      - trigger: template
+        value_template: >
+          {{ states('sensor.time') == states('input_datetime.disattivazione_orario_mobile')[:5] }}
+    actions:
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.notify_mobile
+    mode: single
+  ######################################################################################################################
+  # ATTIVAZIONE/DISATTIVAZIONE NOTIFICHE ALEXA                                                                      #
+  ######################################################################################################################
+  - alias: Attivazione Oraria Notifiche Alexa
+    triggers:
+      - trigger: template
+        value_template: >
+          {{ states('sensor.time') == states('input_datetime.attivazione_orario_alexa')[:5] }}
+    actions:
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.notify_alexa
+    mode: single
+  - alias: Disattivazione Oraria Notifiche Alexa
+    triggers:
+      - trigger: template
+        value_template: >
+          {{ states('sensor.time') == states('input_datetime.disattivazione_orario_alexa')[:5] }}
+    actions:
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.notify_alexa
+    mode: single
+  ######################################################################################################################
+  # ATTIVAZIONE/DISATTIVAZIONE NOTIFICHE WHATSAPP                                                                      #
+  ######################################################################################################################
+  - alias: Attivazione Oraria Notifiche Whatsapp
+    triggers:
+      - trigger: template
+        value_template: >
+          {{ states('sensor.time') == states('input_datetime.attivazione_orario_whatsapp')[:5] }}
+    actions:
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.notify_whatsapp
+    mode: single
+  - alias: Disattivazione Oraria Notifiche Whatsapp
+    triggers:
+      - trigger: template
+        value_template: >
+          {{ states('sensor.time') == states('input_datetime.disattivazione_orario_whatsapp')[:5] }}
+    actions:
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.notify_whatsapp
+    mode: single
