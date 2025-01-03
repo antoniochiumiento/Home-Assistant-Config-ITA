@@ -1,0 +1,26 @@
+########################################################################################################################
+#                                                                                                                      #
+#                                                                                                                      #
+#                                  ******   CONFIGURATION - HOME ASSISTANT   ******                                    #
+#                                                                                                                      #
+#                                                                                                                      #
+########################################################################################################################
+  ######################################################################################################################
+  # CARICA LE INTEGRAZIONI PREDEFINITE DI HOME ASSISTANT - NON RIMUOVERE!!!                                            #
+  ######################################################################################################################
+default_config:
+  ######################################################################################################################
+  # INCLUDE PIÙ FILE YAML NELLA CONFIGURAZIONE PRINCIPALE, SUDDIVIDENDO LA CONFIGURAZIONE IN MODULI PIÙ PICCOLI        #
+  # E ORGANIZZATI. TUTTI I FILE SARANNO CONTENUTI NELLA CARTELLA PACKAGES                                              #
+  ######################################################################################################################
+homeassistant:
+  packages: !include_dir_named packages
+
+  ######################################################################################################################
+  # LA CONFIGURAZIONE VIENE SUDDIVISA IN PIÙ FILE YAML ORGANIZZATI PER CATEGORIA                                       #
+  ######################################################################################################################
+automation: !include_dir_merge_list automation/
+script: !include_dir_merge_list script/
+scene: !include_dir_merge_list scene/
+sensor: !include_dir_merge_list sensor/
+sensor: !include_dir_merge_list template/
