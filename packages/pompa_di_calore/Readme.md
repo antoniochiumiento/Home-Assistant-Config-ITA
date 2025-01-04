@@ -10,5 +10,4 @@ Questo progetto descrive come integrare la pompa di calore utilizzando **Espalth
 ## Configurazione di Espaltherma
 Espaltherma è configurato per inviare i dati operativi della pompa di calore al broker MQTT configurato su Home Assistant. Esempio di configurazione MQTT:
 
-<img src="/packages/pompa_di_calore/screenshot/Pompa_di_Calore.PNG" alt="Gauge" width="400"/>
-<img src="/packages/pompa_di_calore/screenshot/Pompa_di_Calore_2.PNG" alt="Gauge" width="400"/>
+<img src="/packages/pompa_di_calore/screenshot/Pompa_di_Calore.PNG" alt="Gauge" width="400"/><img src="/packages/pompa_di_calore/screenshot/Pompa_di_Calore_2.PNG" alt="Gauge" width="400"/>
