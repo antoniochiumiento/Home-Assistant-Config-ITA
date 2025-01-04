@@ -1,0 +1,30 @@
+- binary_sensor:
+    - name: "Termostato PDC"
+      unique_id: "termostato"
+      icon: mdi:thermostat
+      device_class: power
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'Termostato ON/OFF') }}
+    - name: "Sbrinamento"
+      unique_id: "sbrinamento"
+      icon: mdi:snowflake-alert
+      device_class: power
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'Sbrinamento') }}
+    - name: "Recupero Olio"
+      unique_id: "recupero_olio"
+      device_class: power
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'Recupero dell’olio') }}
+    - name: "Modalità silenziosa"
+      unique_id: "modalita_silenziosa"
+      icon: mdi:volume-variant-off
+      device_class: power
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'Modalità silenziosa') }}
+    - name: "Prevenzione congelamento"
+      unique_id: "prevenzione_congelamento"
+      icon: mdi:snowflake-alert
+      device_class: power
+      state: >
+        {{ state_attr('sensor.althermasensors', 'Prevenzione congelamento') }}

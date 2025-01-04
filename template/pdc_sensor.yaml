@@ -1,0 +1,126 @@
+- sensor:
+    - name: "Modo di funzionamento"
+      unique_id: "modo_di_funzionamento"
+      icon: mdi:heat-wave
+      state_class: measurement
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'Modo di funzionamento') }}
+    - name: "Pressione"
+      unique_id: "pressione"
+      unit_of_measurement: "°C"
+      device_class: pressure
+      state_class: measurement
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'Pressione')/10 }}
+    - name: "Temperatura esterna"
+      unique_id: "temp_esterna"
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state_class: measurement
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'Temperatura dell aria esterna(R1T)') }}
+    - name: "Temperatura acqua in ingresso"
+      unique_id: "temp_acqua_ingresso"
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state_class: measurement
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'Temp. acqua ingresso (R4T)') }}
+    - name: "Temperatura acqua prima BUH"
+      unique_id: "temp_acqua_prima_buh"
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state_class: measurement
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'Temp. acqua uscita prima BUH (R1T)') }}
+    - name: "Temperatura acqua dopo BUH"
+      unique_id: "temp_acqua_dopo_buh"
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state_class: measurement
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'Temp. acqua uscita dopo BUH (R2T)') }}
+    - name: "Temperatura ambiente interna"
+      unique_id: "temp_ambiente_interna"
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state_class: measurement
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'Temp. ambiente interna (R1T)') }}
+    - name: "Inverter primary current"
+      unique_id: "inv_primary_current"
+      unit_of_measurement: "A"
+      device_class: current
+      state_class: measurement
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'INV primary current (A)') }}
+    - name: "Flussimetro"
+      unique_id: "flussimetro"
+      unit_of_measurement: "L/min"
+      icon: mdi:waves-arrow-right
+      state_class: measurement
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'Sensore flusso (l/min)') }}
+    - name: "Voltaggio"
+      unique_id: "voltaggio"
+      unit_of_measurement: "V"
+      device_class: voltage
+      state_class: measurement
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'Voltaggio (N-fase) (V)') }}
+    - name: "Frequenza"
+      unique_id: "frequenza"
+      unit_of_measurement: "Hz"
+      icon: mdi:sine-wave
+      state_class: measurement
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'Frequenza INV (giri/sec.)') }}
+    - name: "Frequenza 2"
+      unique_id: "frequenza_2"
+      unit_of_measurement: "Hz"
+      icon: mdi:sine-wave
+      state_class: measurement
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'Frequenza INV 2 (giri/sec.)') }}
+    - name: "Temperatura target riscaldamento"
+      unique_id: "temp_target_riscaldamento"
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state_class: measurement
+      state: >
+        {{ state_attr('sensor.none_althermasensors', 'Temp. target riscaldamento boiler') }}
+    - name: "COP"
+      unique_id: "cop"
+      unit_of_measurement: "COP"
+      state: >
+        {% if is_state_attr('sensor.none_althermasensors','Modo di funzionamento', 'Heating') and 
+              is_state_attr('sensor.none_althermasensors','Prevenzione congelamento', 'OFF') %}
+          {% set flow = state_attr('sensor.none_althermasensors','Sensore flusso (l/min)') | float(0) %}
+          {% set delta_temp = (state_attr('sensor.none_althermasensors','Temp. acqua uscita prima BUH (R1T)') | float(0) 
+                               - state_attr('sensor.none_althermasensors','Temp. acqua ingresso (R4T)') | float(0)) %}
+          {% set power = (state_attr('sensor.none_althermasensors','Corrente primaria INV (A)') | float(0) 
+                          * state_attr('sensor.none_althermasensors','Voltaggio (N-fase) (V)') | float(0) / 1000) %}
+          {{ ((flow * 0.06 * 1.16 * delta_temp) / power) | round(2) if power > 0 else 0 }}
+        {% else %}
+          0
+        {% endif %}
+    - name: "DeltaT Q"
+      unique_id: "DeltaT Q"
+      state_class: measurement
+      icon: mdi:thermometer-plus
+      state: >
+        {{ ( ((state_attr('sensor.none_althermasensors','Temp. acqua uscita prima BUH (R1T)') | float - state_attr('sensor.none_althermasensors','Temp. acqua ingresso (R4T)')|float) ) )
+        |round(2) }}
+    - name: "KW Q Riscaldamento"
+      unique_id: "KW Q riscaldamento"
+      state_class: measurement
+      #device_class: power
+      icon: mdi:radiator
+      #ΔQ = m° Cp ΔT.
+      #ΔQ = Rate of heat transfer (kW)
+      #m° = Mass flow rate (kg/s or LPS)
+      #ΔT = Temperature difference in Kelvin
+      #Cp = Specific heat at constant pressure (kJ/kg K) 4.184 J⋅kg−1⋅K−1.
+      state: >
+        {{ (state_attr('sensor.none_althermasensors','Sensore flusso (l/min)')/60 | float * 4.184 * ((state_attr('sensor.none_althermasensors','Temp. acqua uscita prima BUH (R1T)') | float - state_attr('sensor.none_althermasensors','Temp. acqua ingresso (R4T)')|float) ) )
+        |round(2) }}
