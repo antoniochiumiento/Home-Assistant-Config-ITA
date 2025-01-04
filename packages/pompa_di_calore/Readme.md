@@ -4,7 +4,7 @@ Questo package descrive come integrare la pompa di calore Daikin e visualizzarne
 ## Prerequisiti
 
 - **Home Assistant** configurato e funzionante.
-- **Espaltherma** integrato con MQTT per inviare i dati della pompa di calore.
+- **Espaltherma** integrato con MQTT per inviare i dati della pompa di calore. => [ESPAltherma - GitHub Repository](https://github.com/raomin/ESPAltherma)
 - Conoscenza di base della configurazione YAML di Home Assistant.
 
 ## Configurazione di Espaltherma
