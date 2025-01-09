@@ -1,0 +1,69 @@
+title: "Home"
+path: "home"
+cards:
+  - type: "horizontal-stack"
+    cards:
+      - type: "custom:button-card"
+        template: chip_power_consumption
+        variables:
+          ulm_chip_electric_consumption: sensor.pro3em_generale_total_active_power
+          ulm_chip_electric_price: false
+      - type: "custom:button-card"
+        template: chip_temperature
+        variables:
+          ulm_chip_temperature_inside: sensor.temperatura_attuale_tadox
+          ulm_chip_temperature_outside: sensor.temperatura_esterna
+          ulm_chip_temperature_weather: weather.forecast_casa
+      - type: custom:mushroom-chips-card
+        alignment: end
+        chips:
+          - type: template
+            entity: switch.shelly1g3_34b7dacae728_switch_0
+            icon_color: |-
+              {% if is_state('switch.shelly1g3_34b7dacae728_switch_0', 'off') %}
+                green
+              {% else %}
+                red
+              {% endif %}
+            icon: mdi:gate
+            tap_action:
+              action: toggle
+              confirmation:
+                text: Sei sicuro?
+            button_action:
+              tap_action:
+                action: toggle
+                confirmation:
+                  text: Sei sicuro?
+
+  - type: "custom:button-card"
+    template: "card_esh_welcome"
+    triggers_update: "input_boolean.minimalist_dropdown"
+    variables:
+      ulm_card_esh_welcome_collapse: input_boolean.minimalist_dropdown
+      ulm_weather: false
+      entity_1:
+        nav: "house"
+        icon: "mdi:home"
+        name: "House"
+        color: "blue"
+      entity_2:
+        nav: "luci"
+        icon: "mdi:lightbulb"
+        name: "Luci"
+        color: "yellow"
+      entity_3:
+        nav: "energy"
+        icon: "mdi:home-lightning-bolt"
+        name: "Energia"
+        color: "green"
+      entity_4:
+        nav: "sicurezza"
+        icon: "mdi:shield"
+        name: Sicurezza
+        color: "red"
+      entity_5:
+        nav: "pdc"
+        icon: "mdi:heat-pump"
+        name: PDC
+        color: "yellow"
