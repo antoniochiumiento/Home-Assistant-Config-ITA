@@ -124,3 +124,12 @@
       state: >
         {{ (state_attr('sensor.none_althermasensors','Sensore flusso (l/min)')/60 | float * 4.184 * ((state_attr('sensor.none_althermasensors','Temp. acqua uscita prima BUH (R1T)') | float - state_attr('sensor.none_althermasensors','Temp. acqua ingresso (R4T)')|float) ) )
         |round(2) }}
+    ########################################################################################################################
+    # DIFFERENZA DI TEMPERATURA TRA LA MANDATA DELLA POMPA DI CALORE E LA MANDATA DEL RISCALDAMENTO A PAVIMENTI.           #
+    # EQUIVALE ALLA PERDITA DI TEMPERATURA DELL'IMPIANTO                                                                   #
+    ########################################################################################################################
+    - name: "Differenza Temperatura PDC - Pavimento"
+      unique_id: "diff_temp_pdc_pav"
+      unit_of_measurement: "°C"
+      state: >
+        {{ (states('sensor.temperatura_acqua_prima_buh') | float) - (states('sensor.mandata_temperature') | float) |round(1) }}
