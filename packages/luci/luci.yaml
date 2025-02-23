@@ -1,0 +1,78 @@
+########################################################################################################################
+#                                                                                                                      #
+#                                                                                                                      #
+#                                        ******   AUTOMAZIONI - LUCI   ******                                          #
+#                                                                                                                      #
+#                                                                                                                      #
+########################################################################################################################
+automation:
+  ######################################################################################################################
+  # NOTIFICA LUCI ACCESE QUANDO ESCO DI CASA                                                                           #
+  ######################################################################################################################
+  - alias: Notifica Luci Accese Fuori Casa
+    description: Notifica se ci sono luci accese quando si è fuori casa.
+    triggers:
+      - trigger: state
+        entity_id: person.antonio
+        to: "not_home"
+    actions:
+      - variables:
+          luci_accese: |
+            {{ states.light
+              | selectattr('entity_id', 'in', [
+                'light.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',              
+                'light.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',            
+                'light.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',            
+                'light.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',            
+                'light.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',            
+                'light.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',            
+                'light.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',            
+                'light.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',            
+                'light.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',            
+              ])
+              | selectattr('state', 'eq', 'on')
+              | map(attribute='entity_id')
+              | list }}
+          messaggio: |
+            {% if luci_accese | length == 0 %}
+              💡Tutte le LUCI sono OFF.
+            {% else %}
+              {% if luci_accese | length > 0 %}
+                Ci sono LUCI accese:
+                {% for luce in luci_accese %}
+                  - {{ states[luce].attributes.friendly_name }} 💡
+                {% endfor %}
+              {% endif %}
+            {% endif %}
+      - data:
+          message: "{{ messaggio }}"
+        action: notify.mobile_app_iphone_di_antonio
+    mode: single  
+  ######################################################################################################################
+  # ACCENDI LUCE ESTERNA DOPO IL TRAMONTO E SPEGNI ALLE 2                                                              #
+  ######################################################################################################################
+  - alias: Accendi luci al tramonto e spegnile alle 2
+    description: Accendi le luci esterne mezz'ora prima del tramonto e spegnile alle 2:00
+    triggers:
+      - trigger: sun
+        event: sunset
+      - trigger: time
+        at: "02:00:00"
+    actions:
+      - choose:
+          - conditions:
+              - condition: sun
+                after: sunset
+                after_offset: "-0:30:00"
+            sequence:
+              - action: light.turn_on
+                target:
+                  entity_id: light.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          - conditions:
+              - condition: time
+                after: "02:00:00"
+            sequence:
+              - action: light.turn_off
+                target:
+                  entity_id: light.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    mode: single
