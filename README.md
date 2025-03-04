@@ -7,3 +7,7 @@
 ## Repository
 Questo repository contiene la mia configurazione di Home Assistant. È una raccolta dei miei file di configurazione, automazioni, script e tanto altro ancora.
 Il repository è in continuo aggiornamento...
+
+## Progetti
+Una lista dei progetti (automazioni, script ecc... ) che ho implementato nella mia configurazione Home Assistant.
+
