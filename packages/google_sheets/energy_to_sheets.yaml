@@ -1,0 +1,21 @@
+homeassistant:
+  customize: {}
+
+input_datetime:
+  energy_log_time:
+    name: Orario registrazione consumo
+    has_time: true
+    has_date: false
+
+automation:
+  - alias: "Salva consumo energetico su Google Sheets"
+    trigger:
+      - platform: time
+        at: "23:59:00"
+    action:
+      - service: google_sheets.append_sheet
+        data:
+          sheet_name: "Consumi_Energetici"
+          data:
+            - "{{ now().strftime('%Y-%m-%d') }}"
+            - "{{ states('sensor.total_energy_consumption') }}"

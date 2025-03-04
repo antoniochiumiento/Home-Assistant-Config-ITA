@@ -17,3 +17,7 @@ Questo package configura Home Assistant per salvare dei valori automaticamente i
 
 - ** Creare il package
     Crea un file YAML in /config/packages
+
+## Progetti realizzati grazie a questo package
+
+### Storico Consumo Energetico
