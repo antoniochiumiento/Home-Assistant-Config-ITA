@@ -1,4 +1,4 @@
-# **UPS **
+# UPS
 Gestire le interruzioni di corrente non è mai una priorità assoluta quando si pensa alla smarthome, a implementare un server casalingo o a spostare alcuni dei propri servizi in self-hosted .... fino a quando non sarà l'unica priorità assoluta dopo che un blackout bloccherà tutti i nostri servizi e server in casa mentre noi siamo lontani da essa o peggio ancora quando il NAS casalingo si danneggerà e perderemo una parte dei nostri dati.
 
 Per fortuna per tutto ciò ci viene in aiuto **NUT**.
@@ -16,7 +16,7 @@ Questa guida per installare NUT è suddivisa in due versioni:
 - Installare e Configurare NUT su un Raspberry PI
 - Installare e configurare NUT in un container Proxmox
 
-Integrazione di NUT in Home Assistant
+**Integrazione di NUT in Home Assistant**
 
 Introduzione
 
