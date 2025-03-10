@@ -35,7 +35,7 @@ Se NUT è installato su un altro dispositivo rispetto alla nostra installazione 
 Modifica il file di configurazione di NUT:
 
 ```
-sudo nano /etc/nut/upsd.conf'
+sudo nano /etc/nut/upsd.conf
 
 Aggiungi questa riga per permettere connessioni da Home Assistant:
 
