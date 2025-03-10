@@ -1,0 +1,92 @@
+########################################################################################################################
+#                                                                                                                      #
+#                                                                                                                      #
+#                                       ******      UPS MANAGEMENT    ******                                           #
+#                                       **      PACKAGE  - VER. 0.0.1     **                                           #
+#                                       **   AUTORE: ANTONIO CHIUMIENTO   **                                           #
+#                                                                                                                      #
+#                                                                                                                      #
+########################################################################################################################
+homeassistant:
+  time_zone: Europe/Rome
+  customize:
+    package.node_anchors:
+      customize: &customize
+        package: "UPS MANAGEMENT 0.0.1"
+        author: "Antonio Chiumiento"
+########################################################################################################################
+#                                                                                                                      #
+#                                                                                                                      #
+#                                   ******   AUTOMAZIONI - UPS MANAGEMENT   ******                                     #
+#                                                                                                                      #
+#                                                                                                                      #
+########################################################################################################################
+automation:
+  ######################################################################################################################
+  # NOTIFICA MANCANZA DI CORRENTE ELETTRICA                                                                            #
+  ######################################################################################################################
+  - alias: "[Mobile] Notifica power outage"
+    triggers:
+      trigger: state
+      entity_id: sensor.ups_status
+    conditions:
+      - condition: state
+        entity_id:
+          - input_boolean.notify_app_mobile
+        state: "on"
+    actions:
+      action: notify.mobile_app
+      data:
+        data:
+          push:
+            badge: 1
+        title: Home Assistant - UPS
+        message: >
+          {% if trigger.to_state.state == 'OB' %}
+          ATTENZIONE: Assenza di tensione elettrica in casa!
+          {% elif trigger.to_state.state == 'OL' %}
+          Fornitura elettrica domestica ristabilita.
+          {% else %}
+          UPS fuori linea.
+          {% endif %}
+  ######################################################################################################################
+  # NOTIFICA LIVELLO BATTERIA UPS BASSO                                                                                #
+  ######################################################################################################################
+  - alias: "[Mobile]Notifica batteria UPS bassa"
+    triggers:
+      trigger: numeric_state
+      entity_id: sensor.ups_battery_charge
+      below: 15
+    conditions:
+      - condition: state
+        entity_id:
+          - input_boolean.notify_app_mobile
+        state: "on"
+    actions:
+      - action: notify.mobile_app
+        data:
+          data:
+            push:
+              badge: 1
+          title: Home Assistant - UPS
+          message: "Attenzione, capacità residua dell'UPS inferiore al 15%."
+  ######################################################################################################################
+  # NOTIFICA CAMBIO DI STATO UPS                                                                                       #
+  ######################################################################################################################
+  - alias: "[Mobile]Cambio di stato UPS"
+    triggers:
+      trigger: event
+      event_type: nut.ups_event
+    conditions:
+      - condition: state
+        entity_id:
+          - input_boolean.notify_app_mobile
+        state: "on"
+    actions:
+      action: notify.mobile_app
+      data:
+        data:
+          push:
+            badge: 1
+        title: Home Assistant - UPS
+        message: "{{ trigger.event.data.notify_msg }}"

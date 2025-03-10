@@ -12,7 +12,7 @@ homeassistant:
   customize:
     package.node_anchors:
       customize: &customize
-        package: "Notifiche 0.0.1"
+        package: "Raccolta Differenziata 0.0.1"
         author: "Antonio Chiumiento"
   ######################################################################################################################
   # IMPOSTAZIONI PACKAGE                                                                                               #
