@@ -33,22 +33,22 @@ Creare una card personalizzata con le informazioni più importanti dell'UPS.
 Se NUT è installato su un altro dispositivo rispetto alla nostra installazione Home Assistant (come nel nostro caso un Raspberry Pi o un container), devi assicurarti che Home Assistant possa accedervi.
 
 Modifica il file di configurazione di NUT:
-
-`sudo nano /etc/nut/upsd.conf'
-
+```
+sudo nano /etc/nut/upsd.conf
+```
 Aggiungi questa riga per permettere connessioni da Home Assistant:
-
+```
 LISTEN 0.0.0.0 3493
-
+```
 Poi, modifica il file degli utenti:
-
+```
 sudo nano /etc/nut/upsd.users
-
+```
 
 Riavvia i servizi di NUT:
-
+```
 sudo systemctl restart nut-server nut-client
-
+```
 2️⃣ **Aggiungere l'integrazione NUT in Home Assistant**
 
 Apri Home Assistant.
@@ -70,7 +70,7 @@ Password: monitor_password
 Conferma e Home Assistant rileverà automaticamente il tuo UPS.
 
 3️⃣ **Creare una card personalizzata nella dashboard**
-
+```
 type: vertical-stack
 title: UPS
 cards:
@@ -96,3 +96,4 @@ cards:
       green: 50
       yellow: 20
       red: 0
+```
