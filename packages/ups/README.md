@@ -10,8 +10,8 @@ Grazie a NUT, il sistema può:
 - Fornire dati a dispositivi in rete per una gestione centralizzata dell'energia.
 
 Questa guida per installare NUT è suddivisa in due versioni:
-- Installare e Configurare NUT su un Raspberry PI
-- Installare e configurare NUT in un container Proxmox
+- [Installare e Configurare NUT su un Raspberry PI](https://github.com/antoniochiumiento/Home-Assistant-Config-ITA/blob/main/packages/ups/NUT_Rasp.md)
+- [Installare e configurare NUT in un container Proxmox](https://github.com/antoniochiumiento/Home-Assistant-Config-ITA/blob/main/packages/ups/NUT_Proxmox.md)
 
 ## Integrazione di NUT in Home Assistant
 
