@@ -18,10 +18,7 @@ Questa guida per installare NUT è suddivisa in due versioni:
 **Introduzione**
 Se hai configurato NUT (Network UPS Tools) sul tuo Raspberry Pi o su un altro server, puoi integrare le informazioni del tuo UPS in Home Assistant per monitorarlo direttamente dalla tua dashboard.
 
-Questa guida spiega come:
-
-**Integrare NUT in Home Assistant**
-Creare una card personalizzata con le informazioni più importanti dell'UPS.
+Questa guida spiega come integrare NUT in Home Assistant e creare una card personalizzata con le informazioni più importanti dell'UPS.
 
 1️⃣ **Abilitare l'accesso remoto a NUT**
 Se NUT è installato su un altro dispositivo rispetto alla nostra installazione Home Assistant (come nel nostro caso un Raspberry Pi o un container), devi assicurarti che Home Assistant possa accedervi.
@@ -51,7 +48,7 @@ Vai su Impostazioni > Dispositivi e Servizi.
 Clicca su Aggiungi integrazione e cerca NUT.
 
 Inserisci i seguenti dati:
-
+```
 Host: IP del Raspberry Pi o server con NUT (es. 192.168.1.100)
 
 Porta: 3493
@@ -59,7 +56,7 @@ Porta: 3493
 Username: monitor
 
 Password: monitor_password
-
+```
 Conferma e Home Assistant rileverà automaticamente il tuo UPS.
 
 3️⃣ **Creare una card personalizzata nella dashboard**
