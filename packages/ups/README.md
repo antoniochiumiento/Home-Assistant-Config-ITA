@@ -5,31 +5,25 @@ Per fortuna per tutto ciò ci viene in aiuto **NUT**.
 
 **Network UPS Tools** (**NUT**) è un software open-source che consente di monitorare e gestire gruppi di continuità (UPS). 
 Grazie a NUT, il sistema può:
-
-Monitorare lo stato dell'UPS (carica della batteria, tensione, capacità residua, ecc.).
-
-Eseguire azioni automatiche in caso di interruzione di corrente, come spegnere in sicurezza il Raspberry Pi.
-
-Fornire dati a dispositivi in rete per una gestione centralizzata dell'energia.
+- Monitorare lo stato dell'UPS (carica della batteria, tensione, capacità residua, ecc.).
+- Eseguire azioni automatiche in caso di interruzione di corrente, come spegnere in sicurezza il Raspberry Pi.
+- Fornire dati a dispositivi in rete per una gestione centralizzata dell'energia.
 
 Questa guida per installare NUT è suddivisa in due versioni:
 - Installare e Configurare NUT su un Raspberry PI
 - Installare e configurare NUT in un container Proxmox
 
-**Integrazione di NUT in Home Assistant**
+## Integrazione di NUT in Home Assistant
 
-Introduzione
-
+**Introduzione**
 Se hai configurato NUT (Network UPS Tools) sul tuo Raspberry Pi o su un altro server, puoi integrare le informazioni del tuo UPS in Home Assistant per monitorarlo direttamente dalla tua dashboard.
 
 Questa guida spiega come:
 
-**Integrare NUT in Home Assistant.**
-
+**Integrare NUT in Home Assistant**
 Creare una card personalizzata con le informazioni più importanti dell'UPS.
 
 1️⃣ **Abilitare l'accesso remoto a NUT**
-
 Se NUT è installato su un altro dispositivo rispetto alla nostra installazione Home Assistant (come nel nostro caso un Raspberry Pi o un container), devi assicurarti che Home Assistant possa accedervi.
 
 Modifica il file di configurazione di NUT:
@@ -50,7 +44,6 @@ Riavvia i servizi di NUT:
 sudo systemctl restart nut-server nut-client
 ```
 2️⃣ **Aggiungere l'integrazione NUT in Home Assistant**
-
 Apri Home Assistant.
 
 Vai su Impostazioni > Dispositivi e Servizi.
