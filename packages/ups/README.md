@@ -61,29 +61,33 @@ Conferma e Home Assistant rileverà automaticamente il tuo UPS.
 
 3️⃣ **Creare una card personalizzata nella dashboard**
 ```
-type: vertical-stack
-title: UPS
-cards:
-  - type: history-graph
-    entities:
-      - name: Status
-        entity: sensor.nutdev1_status
-      - entity: sensor.ups_status
-        name: Stato UPS
-      - entity: sensor.ups_battery_charge
-        name: Carica Batteria
-      - entity: sensor.ups_input_voltage
-        name: Tensione Ingresso
-      - entity: sensor.ups_load
-        name: Carico UPS
-      - entity: sensor.ups_time_remaining
-        name: Autonomia (minuti)
-    hours_to_show: 4
-  - type: gauge
-    entity: sensor.nutdev1_battery_charge
-    name: Battery Charge
-    severity:
-      green: 50
-      yellow: 20
-      red: 0
+  - type: vertical-stack
+    title: UPS 1
+    cards:
+      - type: history-graph
+        entities:
+          - entity: sensor.ups_stato
+            name: Stato UPS 1
+          - entity: sensor.ups_carica_batterie
+            name: Carica Batteria
+          - entity: sensor.ups_tensione_di_ingresso
+            name: Tensione Ingresso
+          - entity: sensor.ups_carico
+            name: Carico UPS
+          - type: entity
+            entity: sensor.ups_autonomia_della_batteria
+            name: Autonomia (minuti)
+            icon: mdi:battery-clock
+            state: "{{ (states['sensor.ups_autonomia_della_batteria'] | int / 60) | round(1) }} min"
+        hours_to_show: 4
+      - type: gauge
+        entity: sensor.ups_carica_batterie
+        name: Carica Batteria UPS 1
+        severity:
+          green: 50
+          yellow: 20
+          red: 0
 ```
+
+
+Possiamo ovviamente inserire nello stesso Home Assistant più di un UPS e monitorarne qualsiasi suo stato facilmente configurando più NUT nelle impostazioni e moltiplicando la configurazione nel lovelace.

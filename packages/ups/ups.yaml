@@ -25,7 +25,7 @@ automation:
   ######################################################################################################################
   # NOTIFICA MANCANZA DI CORRENTE ELETTRICA                                                                            #
   ######################################################################################################################
-  - alias: "[Mobile] Notifica power outage"
+  - alias: "[Mobile][UPS] Notifica power outage"
     triggers:
       trigger: state
       entity_id: sensor.ups_status
@@ -43,16 +43,16 @@ automation:
         title: Home Assistant - UPS
         message: >
           {% if trigger.to_state.state == 'OB' %}
-          ATTENZIONE: Assenza di tensione elettrica in casa!
+          [UPS] ATTENZIONE: Assenza di tensione elettrica in casa!
           {% elif trigger.to_state.state == 'OL' %}
-          Fornitura elettrica domestica ristabilita.
+          [UPS] Fornitura elettrica domestica ristabilita.
           {% else %}
-          UPS fuori linea.
+          [UPS] UPS fuori linea.
           {% endif %}
   ######################################################################################################################
   # NOTIFICA LIVELLO BATTERIA UPS BASSO                                                                                #
   ######################################################################################################################
-  - alias: "[Mobile]Notifica batteria UPS bassa"
+  - alias: "[Mobile][UPS] Notifica batteria UPS bassa"
     triggers:
       trigger: numeric_state
       entity_id: sensor.ups_battery_charge
@@ -69,11 +69,11 @@ automation:
             push:
               badge: 1
           title: Home Assistant - UPS
-          message: "Attenzione, capacità residua dell'UPS inferiore al 15%."
+          message: "[UPS] Attenzione, capacità residua dell'UPS inferiore al 15%."
   ######################################################################################################################
   # NOTIFICA CAMBIO DI STATO UPS                                                                                       #
   ######################################################################################################################
-  - alias: "[Mobile]Cambio di stato UPS"
+  - alias: "[Mobile][UPS] Cambio di stato UPS"
     triggers:
       trigger: event
       event_type: nut.ups_event
@@ -89,4 +89,4 @@ automation:
           push:
             badge: 1
         title: Home Assistant - UPS
-        message: "{{ trigger.event.data.notify_msg }}"
+        message: "[UPS] {{ trigger.event.data.notify_msg }}"
