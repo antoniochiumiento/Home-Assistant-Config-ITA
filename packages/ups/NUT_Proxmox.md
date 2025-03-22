@@ -10,6 +10,7 @@ Accedi al terminale di Proxmox ed esegui il seguente comando:
 bash -c "$(wget -qLO - https://community-scripts.github.io/ProxmoxVE/scripts?id=peanut)"
 ```
 Lo script configurerà automaticamente il container con NUT installato e pronto all'uso.
+PeaNUT sarà raggiungibile all'indirizzo: http://IP-CONTAINER:3000
 
 2️⃣ **Abilitare l'Accesso USB al Container (se necessario)**
 
