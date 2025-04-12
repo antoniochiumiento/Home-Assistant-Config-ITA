@@ -1,5 +1,5 @@
 # Home Assistant Config - ITA
-[![Home Assistant Version](https://img.shields.io/badge/HA%20Version-2025.3.4%20-blue?style=for-the-badge)](https://github.com/home-assistant/core/releases/tag/2025.3.4)
+[![Home Assistant Version](https://img.shields.io/badge/HA%20Version-2025.4.2%20-blue?style=for-the-badge)](https://github.com/home-assistant/core/releases/tag/2025.4.2)
 ![GitHub License](https://img.shields.io/github/license/antoniochiumiento/Home-Assistant-Config-ITA?style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/antoniochiumiento/Home-Assistant-Config-ITA?style=for-the-badge)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/antoniochiumiento/Home-Assistant-Config-ITA?style=for-the-badge)
